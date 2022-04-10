@@ -40,13 +40,28 @@ const productSchema = new mongoose.Schema({
     }
 });
 
+productSchema.methods.toggleOnSale = function () {
+    this.onSale = !this.onSale;
+    return this.save();
+}
+
 const Product = mongoose.model('Product', productSchema);
 
-const bike = new Product ({ name: 'Helmet', price: -10000, categories: ['Cycling', 'Safety'], size: 'S' })
+const findProduct = async () => {
+    const foundProduct = await Product.findOne({ name: 'Helmet'});
+    console.log(foundProduct)
+    await foundProduct.toggleOnSale();
+    console.log(foundProduct)
+}
+
+findProduct();
+
+
+const bike = new Product ({ name: 'Helmet', price: 10000, categories: ['Cycling', 'Safety'], size: 'S' })
 bike.save()
     .then(data => {
         console.log('It worked!');
-        console.log(data);
+        
     })
     .catch(err => {
         console.log('Error')
@@ -62,3 +77,4 @@ bike.save()
 //         console.log('Erro')
 //         console.log(err)
 //     })
+
